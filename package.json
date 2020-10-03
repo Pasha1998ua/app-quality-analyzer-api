@@ -1,0 +1,18 @@
+{
+  "name": "appqualityanalyzerapi",
+  "version": "1.0.0",
+  "description": "API for app quality calculation",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "fastify": "3.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.4"
+  },
+  "author": "Pavlo Huk",
+  "license": "ISC"
+}
