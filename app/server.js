@@ -1,8 +1,24 @@
 const fastify = require('fastify')({ logger: false })
 const calcs = require('./calcs');
+const mysql = require("mysql2");
+const md5 = require('md5');
+
+const connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    database: "app_quality_analyze",
+    password: "root"
+});
+connection.connect(function(err){
+    if (err) { return console.error("Error" + err.message); }
+    else { console.log("Connection success"); }
+});
 
 // Routes
 fastify.post('/calculate/', async (request, reply) => {
+    reply.headers({
+        'access-control-allow-origin': '*',
+      })
     try {
         let body;
         if(request && request.body) {
@@ -23,6 +39,16 @@ fastify.post('/calculate/', async (request, reply) => {
         }
 
         let result = calcs.calculateParams(body.rMatrix, body.sMatrix);
+
+        // Write to data base
+        let paramsStringified = JSON.stringify({rMatrix: body.rMatrix,sMatrix: body.sMatrix,})
+        const user = [md5(paramsStringified), JSON.stringify(result), paramsStringified];
+        const sql = "INSERT INTO data(hash, value, params) VALUES(?, ?, ?)";
+        
+        connection.query(sql, user, function(err, results) {
+            if(err) console.log(err);
+            else console.log("Data added to data base");
+        });
 
         reply.send({ 
             statusCode: 200,

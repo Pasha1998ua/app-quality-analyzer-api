@@ -8,7 +8,9 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
-    "fastify": "3.4.1"
+    "fastify": "3.4.1",
+    "mysql2": "2.2.5",
+    "md5": "2.3.0"
   },
   "devDependencies": {
     "nodemon": "2.0.4"
