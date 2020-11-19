@@ -62,6 +62,52 @@ fastify.post('/calculate/', async (request, reply) => {
     }
 })
 
+fastify.get('/get-params-from-base/', async (request, reply) => {
+    reply.headers({
+        'access-control-allow-origin': '*',
+      })
+    try {
+        let body;
+        if(!request || !request.query || !request.query.id) {
+            reply.send({ 
+                statusCode: 400,
+                result: "Bad request" 
+            })
+            return false;
+        }
+
+        const sql = `SELECT * FROM data WHERE id = ${request.query.id}`;
+        
+        let result = connection.query(sql, function(err, results) {
+            if(err) {
+                console.error(err);
+                reply.send({ 
+                    statusCode: 400,
+                    result: "Data base query error" 
+                })
+            } else {
+                if(results && Array.isArray(results) && results.length > 0){
+                    let data = JSON.parse(results[0].params);
+                    reply.send({ 
+                        statusCode: 200,
+                        result: data 
+                    })
+                } else {
+                    reply.send({ 
+                        statusCode: 400,
+                        result: "Empty data" 
+                    })
+                }
+            }
+        });
+    } catch (err) {
+        reply.send({ 
+            statusCode: 500,
+            result: err.toString()
+        })
+    }
+})
+
 // Run the server!
 const start = async () => {
     try {
