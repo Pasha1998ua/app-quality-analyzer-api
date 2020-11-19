@@ -62,7 +62,7 @@ fastify.post('/calculate/', async (request, reply) => {
     }
 })
 
-fastify.get('/get-params-from-base/', async (request, reply) => {
+fastify.get('/get-data-from-base/', async (request, reply) => {
     reply.headers({
         'access-control-allow-origin': '*',
       })
@@ -87,7 +87,7 @@ fastify.get('/get-params-from-base/', async (request, reply) => {
                 })
             } else {
                 if(results && Array.isArray(results) && results.length > 0){
-                    let data = JSON.parse(results[0].params);
+                    let data = JSON.parse(results[0].value);
                     reply.send({ 
                         statusCode: 200,
                         result: data 
